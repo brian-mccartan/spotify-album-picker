@@ -348,6 +348,7 @@
     <div class="album-count" id="albumCount"></div>
     <div class="btn-row" style="opacity:1; animation:none; margin-top: 16px;">
       <button class="btn-primary" id="pickBtn" onclick="pickAlbum()">🎲 Pick an Album</button>
+      <button class="btn-secondary" id="playBtn" style="display:none" onclick="openInSpotify()">▶ Play Now</button>
       <button class="btn-secondary" onclick="logout()">Disconnect</button>
     </div>
     <div class="status" id="status"></div>
@@ -442,7 +443,7 @@ async function fetchAllAlbums(token) {
     setStatus('loading', `<span class="spinner"></span>Loading... ${items.length} albums`);
     url = data.next;
   }
-  return items.map(i => ({ name: i.album.name, artist: i.album.artists.map(a=>a.name).join(', ') }));
+  return items.map(i => ({ name: i.album.name, artist: i.album.artists.map(a=>a.name).join(', '), url: i.album.external_urls.spotify }));
 }
 
 // ── UI ────────────────────────────────────
@@ -458,6 +459,8 @@ function setStatus(type, msg) {
 function pickAlbum() {
   if (!albums.length) return;
   const pick = albums[Math.floor(Math.random() * albums.length)];
+window._currentAlbumUrl = pick.url;
+document.getElementById('playBtn').style.display = 'block';
   const card = document.getElementById('albumCard');
   const nameEl = document.getElementById('albumName');
   const artistEl = document.getElementById('albumArtist');
@@ -484,6 +487,13 @@ function updateCount() {
   el.classList.add('visible');
   requestAnimationFrame(() => requestAnimationFrame(() => el.style.opacity = '1'));
 }
+
+
+// ── Open in Spotify ──────────────────────────────────
+function openInSpotify() {
+  if (window._currentAlbumUrl) window.open(window._currentAlbumUrl, '_blank');
+}
+
 
 // ── Init ──────────────────────────────────
 async function init() {
