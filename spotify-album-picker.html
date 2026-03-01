@@ -355,6 +355,7 @@
     <div class="btn-row" style="opacity:1; animation:none; margin-top: 16px;">
       <button class="btn-primary" id="pickBtn" onclick="pickAlbum()">🎲 Pick an Album</button>
       <button class="btn-secondary" id="playBtn" style="display:none" onclick="openInSpotify()">▶ Play Now</button>
+      <button class="btn-secondary" onclick="clearCache()">Refresh Library</button>
       <button class="btn-secondary" onclick="logout()">Disconnect</button>
     </div>
     <div class="status" id="status"></div>
@@ -498,6 +499,13 @@ function updateCount() {
 // ── Open in Spotify ──────────────────────────────────
 function openInSpotify() {
   if (window._currentAlbumUrl) window.open(window._currentAlbumUrl, '_blank');
+}
+
+
+// ── Refresh Library ──────────────────────────────────
+function clearCache() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
 }
 
 
